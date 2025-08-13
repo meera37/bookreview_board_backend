@@ -58,7 +58,7 @@ exports.loginController = async (req, res) => {
 
         // Generate token
         const token = jwt.sign(
-            { userId: existingUser._id, email: existingUser.email },
+            { userId: existingUser._id, name: existingUser.name, email: existingUser.email },
             process.env.SECRETKEY,
             { expiresIn: '1d' }
         );
