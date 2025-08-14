@@ -58,7 +58,6 @@ exports.addReviewController = async (req, res) => {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    // Check if the user already reviewed this book
     const alreadyReviewed = book.reviews.find(
       (r) => r.user.toString() === req.payload.userId
     );
@@ -83,6 +82,41 @@ exports.addReviewController = async (req, res) => {
     await book.save();
 
     res.status(201).json({ message: 'Review added', reviews: book.reviews });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Update review by reviewId
+exports.updateReviewController = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const { bookId, reviewId } = req.params;
+
+    if (!rating || !comment) {
+      return res.status(400).json({ message: 'Rating and comment are required' });
+    }
+
+    const book = await Book.findById(bookId);
+    if (!book) return res.status(404).json({ message: 'Book not found' });
+
+    const review = book.reviews.id(reviewId); 
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+
+    if (review.user.toString() !== req.payload.userId) {
+      return res.status(403).json({ message: 'You can only edit your own review' });
+    }
+
+    review.rating = Number(rating);
+    review.comment = comment;
+
+    //calculate average rating
+    book.averageRating =
+      book.reviews.reduce((acc, item) => item.rating + acc, 0) / book.reviews.length;
+
+    await book.save();
+
+    res.status(200).json({ message: 'Review updated successfully', review });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

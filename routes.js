@@ -4,7 +4,6 @@ const AuthController = require('./controllers/userController')
 const bookController = require('./controllers/bookController');
 const jwtMiddleware = require('./middleware/jwtMiddleware')
 
-
 const route = new express.Router()
 
 //register new doctor
@@ -21,7 +20,8 @@ route.get('/books/:id', bookController.getBookByIdController);
 
 // Add review to a book → Private
 route.post('/books/:id/reviews', jwtMiddleware, bookController.addReviewController);
-
+// Update a review → Private
+route.put('/books/:bookId/reviews/:reviewId', jwtMiddleware, bookController.updateReviewController);
 
 
 module.exports = route

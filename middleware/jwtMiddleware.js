@@ -11,7 +11,7 @@ const jwtMiddleware = (req,res,next)=>{
     try {
         const decoded = jwt.verify(token, process.env.SECRETKEY)
         
-        req.payload = decoded  //req.user = decoded
+        req.payload = decoded  
         next()
     } catch (error) {
         res.status(401).json({ message: 'Invalid token', error: error.message })
