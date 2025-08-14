@@ -1,8 +1,6 @@
 const Book = require('../models/bookModel');
 
-// @desc Add a new book
-// @route POST /api/books
-// @access Private
+//add new book
 exports.addBookController = async (req, res) => {
   try {
     const { title, author, description, coverImageUrl } = req.body;
@@ -20,9 +18,7 @@ exports.addBookController = async (req, res) => {
   }
 };
 
-// @desc Get all books (newest first)
-// @route GET /api/books
-// @access Public
+//get all books
 exports.getAllBooksController = async (req, res) => {
   try {
     const books = await Book.find().sort({ createdAt: -1 });
@@ -32,9 +28,7 @@ exports.getAllBooksController = async (req, res) => {
   }
 };
 
-// @desc Get single book by ID (with reviews populated later)
-// @route GET /api/books/:id
-// @access Public
+// get single book by ID 
 exports.getBookByIdController = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id).populate('reviews');
@@ -49,9 +43,7 @@ exports.getBookByIdController = async (req, res) => {
   }
 };
 
-// @desc Add a review to a book
-// @route POST /api/books/:id/reviews
-// @access Private
+// add a review to a book
 exports.addReviewController = async (req, res) => {
   try {
     const { rating, comment } = req.body;
